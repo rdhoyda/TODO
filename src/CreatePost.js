@@ -1,66 +1,76 @@
-import { useState } from "react"
-export default function CreatePost ({user,handleAddPost}) {
-    const [ title, setTitle ] = useState('')
-    const [ description, setDescription ] = useState('')
-    const [dateCreated, setDateCreated] = useState(new Date().toISOString().slice(0, 10));
-    const [ dateCompleted, setDateCompleted] = useState('')
-    const [complete, setComplete] = useState(false);
+import React, { useState } from "react";
+
+export default function CreatePost({ user, handleAddPost, dispatchPost }) {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [author, setAuthor] = useState("");
+
+  function handleTitleChange(event) {
+    setTitle(event.target.value);
+  }
+
+  function handleContentChange(event) {
+    setContent(event.target.value);
+  }
+
+  function handleAuthorChange(event) {
+    setAuthor(event.target.value);
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    const newPost = {
+      title,
+      content,
+      author,
+      dateCreated: new Date().toISOString(),
+    };
+
+    // Dispatch the CREATE_POST action to update the global post state
+    dispatchPost({ type: "CREATE_POST", post: newPost });
+
+    // Reset the form fields
+    setTitle("");
+    setContent("");
+    setAuthor("");
+  }
 
 
-    function handleTitle (evt) { setTitle(evt.target.value) }
-    function handleDescription (evt) { setDescription(evt.target.value) }
-    function handleDateCreated (evt) {setDateCreated(evt.target.value)}
-    function handleDatecompleted (evt) {setDateCompleted(evt.target.value)}
-    function handleComplete() {
-        setComplete(!complete);
-    
-        if (!complete) {
-          const currentDate = new Date().toISOString().slice(0, 10);
-          setDateCompleted(currentDate);
-        } else {
-          setDateCompleted('');
-        }
-      }
-    function handleCreate () {
-    const newPost = { title, description, author: user, dateCreated, dateCompleted, complete}
-    handleAddPost(newPost);
-}
-
-    return (
-    <form onSubmit={(e) => {e.preventDefault(); handleCreate();}}>
-    <div>Author: <b>{user}</b></div>
-    
+  return (
     <div>
-    <label htmlFor="create-title">Title:</label>
-    <
-        input type="text" 
-        value={title} 
-        onChange={handleTitle} 
-        name="create-title" 
-        id="create-title" 
-        />
-        
-    </div>
-    <div><label htmlFor="create-description">Description:</label>
-    <textarea value={description} onChange={handleDescription} />
-    <
-        input type="submit" 
-        value="Create" 
-        />
+      <h3>Create New Post</h3>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="title">Title:</label>
+          <input
+            type="text"
+            id="title"
+            value={title}
+            onChange={handleTitleChange}
+          />
         </div>
-    <div>
-        <label htmlFor="create-dateCreated">Date Created on:</label>
-        <
-        input type="date" 
-        value={dateCreated} 
-        name="create-dateCreated" 
-        id="create-dateCreated" 
-        />
+        <div>
+          <label htmlFor="content">Content:</label>
+          <textarea
+            id="content"
+            value={content}
+            onChange={handleContentChange}
+          />
+        </div>
+        <div>
+          <label htmlFor="author">Author:</label>
+          <input
+            type="text"
+            id="author"
+            value={author}
+            onChange={handleAuthorChange}
+          />
+        </div>
+        <div>
+          <button type="submit">Create Post</button>
+        </div>
+      </form>
     </div>
- 
-      
-    </form>
-    
-    )
-    }
-    
+  );
+}

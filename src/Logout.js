@@ -1,10 +1,11 @@
-export default function Logout({user,setUser}) {
+export default function Logout({user,dispatchUser}) {
     return (
     <form 
     onSubmit={(e) => 
     {
      e.preventDefault();
-     setUser("");
+     //setUser("");
+     dispatchUser({ type: "LOGOUT"});
      }}
      >
     Logged in as: <b>{user}</b>
